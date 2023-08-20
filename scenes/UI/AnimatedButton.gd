@@ -17,4 +17,5 @@ func on_mouse_exited():
 
 
 func on_pressed():
+	$AudioStreamPlayer.play()
 	$ClickAnimationPlayer.play("click")
