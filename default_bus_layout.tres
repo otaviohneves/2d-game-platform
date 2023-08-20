@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=6 format=2]
+[gd_resource type="AudioBusLayout" load_steps=5 format=2]
 
 [sub_resource type="AudioEffectHighPassFilter" id=2]
 resource_name = "HighPassFilter"
@@ -8,11 +8,6 @@ resonance = 0.25
 [sub_resource type="AudioEffectPitchShift" id=5]
 resource_name = "PitchShift"
 pitch_scale = 1.2
-
-[sub_resource type="AudioEffectPhaser" id=6]
-resource_name = "Phaser"
-rate_hz = 20.0
-feedback = 0.6
 
 [sub_resource type="AudioEffectLowPassFilter" id=3]
 resource_name = "LowPassFilter"
@@ -46,8 +41,6 @@ bus/3/volume_db = 0.0
 bus/3/send = "SFX"
 bus/3/effect/0/effect = SubResource( 5 )
 bus/3/effect/0/enabled = true
-bus/3/effect/1/effect = SubResource( 6 )
-bus/3/effect/1/enabled = true
 bus/4/name = "PlayerDeath"
 bus/4/solo = false
 bus/4/mute = false
