@@ -13,3 +13,6 @@ func change_level(levelIndex):
 
 func change_to_next_level():
 	change_level(currentLevelIndex + 1)
+
+func restart_level():
+	change_level(currentLevelIndex)

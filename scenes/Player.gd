@@ -5,7 +5,7 @@ signal died
 var playerDeathScene = preload("res://scenes/PlayerDeath.tscn")
 var footstepParticles = preload("res://scenes/FootstepParticles.tscn")
 
-enum State { NORMAL, DASHING }
+enum State { NORMAL, DASHING, INPUT_DISABLED }
 
 export(int, LAYERS_2D_PHYSICS) var dashHazardMask
 
@@ -15,7 +15,7 @@ var maxHorizontalSpeed = 140
 var maxDashSpeed = 500
 var minDashSpeed = 200
 var horizontalAcceleration = 1000
-var jumpSpeed = 320
+var jumpSpeed = 300
 var jumpTerminationMultiplier = 3
 var hasDoubleJump = false
 var hasDash = false
@@ -38,6 +38,8 @@ func _process(delta):
 			process_normal(delta)
 		State.DASHING:
 			process_dash(delta)
+		State.INPUT_DISABLED:
+			process_input_disabled(delta)
 	isStateNew = false
 
 
@@ -94,6 +96,7 @@ func process_normal(delta):
 
 func process_dash(delta):
 	if (isStateNew):
+		$DashAudioPlayer.play()
 		$DashParticles.emitting = true
 		$"/root/Helpers".apply_camera_snake(.75)
 		$DashArea/CollisionShape2D.disabled = false
@@ -109,6 +112,12 @@ func process_dash(delta):
 	if (abs(velocity.x) < minDashSpeed):
 		call_deferred("change_state", State.NORMAL)
 
+func process_input_disabled(delta):
+	if (isStateNew):
+		$AnimatedSprite.play("idle")
+	velocity.x = lerp(0, velocity.x, pow(2, -25 * delta))
+	velocity.y += gravity * delta
+	velocity = move_and_slide(velocity, Vector2.UP)
 
 func get_movement_vector():
 	var moveVector = Vector2.ZERO
@@ -146,6 +155,10 @@ func spawn_footsteps(scale = 1):
 	get_parent().add_child(footstepParticlesInstance)
 	footstepParticlesInstance.scale = Vector2.ONE * scale
 	footstepParticlesInstance.global_position = global_position
+	$FootstepAudioPlayer.play()
+
+func disable_player_input():
+	change_state(State.INPUT_DISABLED)
 
 func on_hazard_area_entered(_area2d):
 	$"/root/Helpers".apply_camera_snake(1)
